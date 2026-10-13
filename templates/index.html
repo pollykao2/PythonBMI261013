@@ -1,104 +1,104 @@
 <!doctype html>
 <html lang="zh-Hant">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="輸入身高與體重，計算 BMI 並查看成人健康體位建議。">
-    <title>BMI 計算器 · 好好生活!!!!!!!!!</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  </head>
-  <body>
-    <div class="page">
-      <header class="site-header">
-        <a class="brand" href="{{ url_for('index') }}" aria-label="好好生活，回到首頁">
-          <span class="brand-mark" aria-hidden="true">✳</span>
-          好好生活 <span class="brand-en">WELL LIVING</span>
-        </a>
-        <span class="header-note">把健康，從了解自己開始。</span>
-      </header>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="輸入身高與體重，計算 BMI 並查看成人健康體位建議。">
+    <title>BMI 計算器 · 好好生活</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <a class="brand" href="{{ url_for('index') }}" aria-label="好好生活，回到首頁">
+          <span class="brand-mark" aria-hidden="true">✳</span>
+          好好生活 <span class="brand-en">WELL LIVING</span>
+        </a>
+        <span class="header-note">把健康，從了解自己開始。</span>
+      </header>
 
-      <main>
-        <section class="hero" aria-labelledby="page-title">
-          <div class="hero-copy">
-            <span class="eyebrow"><span class="eyebrow-dot"></span> YOUR HEALTH, YOUR PACE</span>
-            <h1 id="page-title">了解自己的<br><em>健康狀況。</em></h1>
-            <p class="intro">輸入身高與體重，快速算出 BMI，找到適合自己的健康生活方向。</p>
+      <main>
+        <section class="hero" aria-labelledby="page-title">
+          <div class="hero-copy">
+            <span class="eyebrow"><span class="eyebrow-dot"></span> YOUR HEALTH, YOUR PACE</span>
+            <h1 id="page-title">了解自己的<br><em>健康狀況。</em></h1>
+            <p class="intro">輸入身高與體重，快速算出 BMI，找到適合自己的健康生活方向。</p>
 
-            <div class="calculator">
-              <div class="card-heading">
-                <div>
-                  <span class="section-number">01 / CALCULATOR</span>
-                  <h2>計算你的 BMI</h2>
-                </div>
-                <span class="card-icon" aria-hidden="true">↗</span>
-              </div>
+            <div class="calculator">
+              <div class="card-heading">
+                <div>
+                  <span class="section-number">01 / CALCULATOR</span>
+                  <h2>計算你的 BMI</h2>
+                </div>
+                <span class="card-icon" aria-hidden="true">↗</span>
+              </div>
 
-              <form method="post" action="{{ url_for('index') }}" novalidate>
-                <div class="form-fields">
-                  <div class="field">
-                    <label for="height">身高 <span>HEIGHT</span></label>
-                    <div class="input-wrap">
-                      <input id="height" name="height" type="number" inputmode="decimal" min="0.01" step="any" placeholder="例如 170" value="{{ height_input }}" required {% if errors.height %}aria-invalid="true" aria-describedby="height-error"{% endif %}>
-                      <span class="unit">cm</span>
-                    </div>
-                    {% if errors.height %}<p class="field-error" id="height-error">{{ errors.height }}</p>{% endif %}
-                  </div>
-                  <div class="field">
-                    <label for="weight">體重 <span>WEIGHT</span></label>
-                    <div class="input-wrap">
-                      <input id="weight" name="weight" type="number" inputmode="decimal" min="0.01" step="any" placeholder="例如 65" value="{{ weight_input }}" required {% if errors.weight %}aria-invalid="true" aria-describedby="weight-error"{% endif %}>
-                      <span class="unit">kg</span>
-                    </div>
-                    {% if errors.weight %}<p class="field-error" id="weight-error">{{ errors.weight }}</p>{% endif %}
-                  </div>
-                </div>
-                <button type="submit">計算 BMI <span aria-hidden="true">↗</span></button>
-              </form>
-            </div>
-          </div>
+              <form method="post" action="{{ url_for('index') }}" novalidate>
+                <div class="form-fields">
+                  <div class="field">
+                    <label for="height">身高 <span>HEIGHT</span></label>
+                    <div class="input-wrap">
+                      <input id="height" name="height" type="number" inputmode="decimal" min="0.01" step="any" placeholder="例如 170" value="{{ height_input }}" required {% if errors.height %}aria-invalid="true" aria-describedby="height-error"{% endif %}>
+                      <span class="unit">cm</span>
+                    </div>
+                    {% if errors.height %}<p class="field-error" id="height-error">{{ errors.height }}</p>{% endif %}
+                  </div>
+                  <div class="field">
+                    <label for="weight">體重 <span>WEIGHT</span></label>
+                    <div class="input-wrap">
+                      <input id="weight" name="weight" type="number" inputmode="decimal" min="0.01" step="any" placeholder="例如 65" value="{{ weight_input }}" required {% if errors.weight %}aria-invalid="true" aria-describedby="weight-error"{% endif %}>
+                      <span class="unit">kg</span>
+                    </div>
+                    {% if errors.weight %}<p class="field-error" id="weight-error">{{ errors.weight }}</p>{% endif %}
+                  </div>
+                </div>
+                <button type="submit">計算 BMI <span aria-hidden="true">↗</span></button>
+              </form>
+            </div>
+          </div>
 
-          <div class="hero-side">
-            {% if result %}
-              <section class="result-panel {{ result.tone }}" aria-labelledby="result-title" aria-live="polite">
-                <span class="panel-kicker">YOUR RESULT / 計算結果</span>
-                <div class="result-main">
-                  <span class="result-number">{{ result.bmi }}</span>
-                  <span class="result-unit">BMI</span>
-                </div>
-                <div class="result-divider"></div>
-                <span class="result-label">你的體位屬於 <strong>{{ result.label }}</strong></span>
-                <h2 id="result-title">給你的健康建議</h2>
-                <p>{{ result.advice }}</p>
-                <span class="result-decoration" aria-hidden="true">✳</span>
-              </section>
-            {% else %}
-              <div class="illustration" aria-hidden="true">
-                <span class="illustration-ring ring-one"></span>
-                <span class="illustration-ring ring-two"></span>
-                <span class="illustration-center">身體的每一步<br>都值得好好照顧<span>✳</span></span>
-              </div>
-              <div class="side-caption"><span class="caption-line"></span> SMALL STEPS, BETTER DAYS.</div>
-            {% endif %}
-          </div>
-        </section>
+          <div class="hero-side">
+            {% if result %}
+              <section class="result-panel {{ result.tone }}" aria-labelledby="result-title" aria-live="polite">
+                <span class="panel-kicker">YOUR RESULT / 計算結果</span>
+                <div class="result-main">
+                  <span class="result-number">{{ result.bmi }}</span>
+                  <span class="result-unit">BMI</span>
+                </div>
+                <div class="result-divider"></div>
+                <span class="result-label">你的體位屬於 <strong>{{ result.label }}</strong></span>
+                <h2 id="result-title">給你的健康建議</h2>
+                <p>{{ result.advice }}</p>
+                <span class="result-decoration" aria-hidden="true">✳</span>
+              </section>
+            {% else %}
+              <div class="illustration" aria-hidden="true">
+                <span class="illustration-ring ring-one"></span>
+                <span class="illustration-ring ring-two"></span>
+                <span class="illustration-center">身體的每一步<br>都值得好好照顧<span>✳</span></span>
+              </div>
+              <div class="side-caption"><span class="caption-line"></span> SMALL STEPS, BETTER DAYS.</div>
+            {% endif %}
+          </div>
+        </section>
 
-        <section class="information" aria-labelledby="about-title">
-          <div class="about">
-            <span class="section-number">02 / GOOD TO KNOW</span>
-            <h2 id="about-title">BMI 是什麼？</h2>
-            <p>BMI（身體質量指數）是以體重與身高估算體位的簡易指標。計算方式為 <strong>體重（公斤）÷ 身高（公尺）的平方</strong>。</p>
-          </div>
-          <div class="ranges">
-            <h3>成人 BMI 參考範圍 <span>依臺灣成人體位標準</span></h3>
-            <div class="range-row"><span><i class="range-dot low-dot"></i>體重過輕</span><strong>低於 18.5</strong></div>
-            <div class="range-row"><span><i class="range-dot healthy-dot"></i>健康體位</span><strong>18.5 – 未滿 24</strong></div>
-            <div class="range-row"><span><i class="range-dot high-dot"></i>體重過重</span><strong>24 – 未滿 27</strong></div>
-            <div class="range-row"><span><i class="range-dot obese-dot"></i>肥胖</span><strong>27 以上</strong></div>
-          </div>
-        </section>
-        <p class="disclaimer">此結果僅供成人參考，無法反映肌肉量等個別差異，亦不適用於兒童、青少年或孕婦；若有健康疑慮，請諮詢醫療專業人員。</p>
-      </main>
-      <footer>© 好好生活 <span>TAKE CARE, EVERY DAY.</span></footer>
-    </div>
-  </body>
+        <section class="information" aria-labelledby="about-title">
+          <div class="about">
+            <span class="section-number">02 / GOOD TO KNOW</span>
+            <h2 id="about-title">BMI 是什麼？</h2>
+            <p>BMI（身體質量指數）是以體重與身高估算體位的簡易指標。計算方式為 <strong>體重（公斤）÷ 身高（公尺）的平方</strong>。</p>
+          </div>
+          <div class="ranges">
+            <h3>成人 BMI 參考範圍 <span>依臺灣成人體位標準</span></h3>
+            <div class="range-row"><span><i class="range-dot low-dot"></i>體重過輕</span><strong>低於 18.5</strong></div>
+            <div class="range-row"><span><i class="range-dot healthy-dot"></i>健康體位</span><strong>18.5 – 未滿 24</strong></div>
+            <div class="range-row"><span><i class="range-dot high-dot"></i>體重過重</span><strong>24 – 未滿 27</strong></div>
+            <div class="range-row"><span><i class="range-dot obese-dot"></i>肥胖</span><strong>27 以上</strong></div>
+          </div>
+        </section>
+        <p class="disclaimer">此結果僅供成人參考，無法反映肌肉量等個別差異，亦不適用於兒童、青少年或孕婦；若有健康疑慮，請諮詢醫療專業人員。</p>
+      </main>
+      <footer>© 好好生活 <span>TAKE CARE, EVERY DAY.</span></footer>
+    </div>
+  </body>
 </html>
