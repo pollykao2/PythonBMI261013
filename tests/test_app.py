@@ -1,11 +1,20 @@
 import unittest
+import os
+import tempfile
 
-from app import app, bmi_guidance
+from app import app, bmi_guidance, init_database
 
 
 class BmiAppTests(unittest.TestCase):
     def setUp(self):
+        self.database = tempfile.NamedTemporaryFile(delete=False)
+        self.database.close()
+        app.config["DATABASE"] = self.database.name
+        init_database()
         self.client = app.test_client()
+
+    def tearDown(self):
+        os.unlink(self.database.name)
 
     def test_initial_page(self):
         response = self.client.get("/")
@@ -15,11 +24,32 @@ class BmiAppTests(unittest.TestCase):
         self.assertIn("計算你的 BMI", page)
 
     def test_calculation_and_advice(self):
-        response = self.client.post("/", data={"height": "170", "weight": "65"})
+        response = self.client.post("/", data={"name": "王小明", "height": "170", "weight": "65"})
         page = response.get_data(as_text=True)
         self.assertIn("22.5", page)
         self.assertIn("健康體位", page)
         self.assertIn("維持均衡飲食", page)
+
+    def test_user_history_lists_saved_records(self):
+        self.client.post("/", data={"name": "王小明", "height": "170", "weight": "65"})
+        self.client.post("/", data={"name": "王小明", "height": "160", "weight": "60"})
+
+        users_response = self.client.get("/users")
+        self.assertEqual(users_response.status_code, 200)
+        self.assertIn("王小明", users_response.get_data(as_text=True))
+
+        history_response = self.client.get("/users/王小明")
+        history_page = history_response.get_data(as_text=True)
+        self.assertEqual(history_response.status_code, 200)
+        self.assertIn("22.5", history_page)
+        self.assertIn("23.4", history_page)
+        self.assertEqual(history_page.count("202"), 2)
+
+    def test_name_is_required(self):
+        response = self.client.post("/", data={"height": "170", "weight": "65"})
+        page = response.get_data(as_text=True)
+        self.assertIn("請輸入使用者名稱", page)
+        self.assertNotIn("YOUR RESULT", page)
 
     def test_taiwan_adult_thresholds(self):
         for bmi, category in [
