@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ user_name }}的 BMI 歷史 · BMI 計算器</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <a class="brand" href="{{ url_for('index') }}">✳ 好好生活 <span class="brand-en">WELL LIVING</span></a>
+        <a class="history-back" href="{{ url_for('users') }}">所有使用者 ↗</a>
+      </header>
+      <main class="history-page">
+        <span class="section-number">BMI HISTORY</span>
+        <h1>{{ user_name }}的 BMI 歷史</h1>
+        <p class="intro">以下是這位使用者歷次成功計算的 BMI 數值與時間。</p>
+        <div class="history-table-wrap">
+          <table class="history-table">
+            <thead><tr><th>計算時間</th><th>BMI 數值</th></tr></thead>
+            <tbody>
+              {% for record in records %}
+                <tr><td>{{ record.calculated_at }}</td><td><strong>{{ "%.1f"|format(record.bmi) }}</strong></td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,8 +1,71 @@
 import math
+import os
+import sqlite3
+from datetime import datetime
+from contextlib import contextmanager
 
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
+app.config["DATABASE"] = os.environ.get(
+    "DATABASE", os.path.join(app.root_path, "instance", "bmi.sqlite3")
+)
+
+
+@contextmanager
+def get_database():
+    database_path = app.config["DATABASE"]
+    database_directory = os.path.dirname(database_path)
+    if database_directory:
+        os.makedirs(database_directory, exist_ok=True)
+    connection = sqlite3.connect(database_path)
+    connection.row_factory = sqlite3.Row
+    try:
+        yield connection
+        connection.commit()
+    finally:
+        connection.close()
+
+
+def init_database():
+    with get_database() as connection:
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS bmi_records (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_name TEXT NOT NULL,
+                bmi REAL NOT NULL,
+                calculated_at TEXT NOT NULL
+            )
+            """
+        )
+
+
+def list_users():
+    init_database()
+    with get_database() as connection:
+        return connection.execute(
+            """
+            SELECT user_name, COUNT(*) AS record_count
+            FROM bmi_records
+            GROUP BY user_name
+            ORDER BY user_name COLLATE NOCASE
+            """
+        ).fetchall()
+
+
+def list_user_records(user_name):
+    init_database()
+    with get_database() as connection:
+        return connection.execute(
+            """
+            SELECT bmi, calculated_at
+            FROM bmi_records
+            WHERE user_name = ?
+            ORDER BY calculated_at DESC, id DESC
+            """,
+            (user_name,),
+        ).fetchall()
 
 
 def bmi_guidance(bmi):
@@ -41,17 +104,25 @@ def parse_positive_number(value):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    init_database()
+    users = list_users()
+    name_input = ""
     height_input = ""
     weight_input = ""
     errors = {}
     result = None
 
     if request.method == "POST":
+        name_input = request.form.get("name", "").strip()
         height_input = request.form.get("height", "").strip()
         weight_input = request.form.get("weight", "").strip()
         height = parse_positive_number(height_input)
         weight = parse_positive_number(weight_input)
 
+        if not name_input:
+            errors["name"] = "請輸入使用者名稱。"
+        elif len(name_input) > 80:
+            errors["name"] = "使用者名稱不可超過 80 個字元。"
         if height is None:
             errors["height"] = "請輸入大於 0 的有效身高（公分）。"
         if weight is None:
@@ -69,13 +140,46 @@ def index():
                 else:
                     displayed_bmi = round(bmi, 1)
                     result = {"bmi": f"{displayed_bmi:.1f}", **bmi_guidance(displayed_bmi)}
+                    with get_database() as connection:
+                        connection.execute(
+                            """
+                            INSERT INTO bmi_records (user_name, bmi, calculated_at)
+                            VALUES (?, ?, ?)
+                            """,
+                            (
+                                name_input,
+                                displayed_bmi,
+                                datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S"),
+                            ),
+                        )
+                    users = list_users()
 
     return render_template(
         "index.html",
+        users=users,
+        name_input=name_input,
         height_input=height_input,
         weight_input=weight_input,
         errors=errors,
         result=result,
+    )
+
+
+@app.route("/users")
+def users():
+    return render_template("users.html", users=list_users())
+
+
+@app.route("/users/<user_name>")
+def user_history(user_name):
+    records = list_user_records(user_name)
+    if not records:
+        return render_template("users.html", users=list_users()), 404
+    return render_template(
+        "user_history.html",
+        user_name=user_name,
+        records=records,
+        users=list_users(),
     )
 
 
