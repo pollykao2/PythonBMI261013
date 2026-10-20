@@ -35,7 +35,12 @@
 
               <form method="post" action="{{ url_for('index') }}" novalidate>
                 <div class="form-fields">
-                  <div class="field">
+                <div class="field field-full">
+                  <label for="name">使用者名稱 <span>NAME</span></label>
+                  <input id="name" name="name" type="text" maxlength="80" placeholder="例如 王小明" value="{{ name_input }}" required {% if errors.name %}aria-invalid="true" aria-describedby="name-error"{% endif %}>
+                  {% if errors.name %}<p class="field-error" id="name-error">{{ errors.name }}</p>{% endif %}
+                </div>
+                <div class="field">
                     <label for="height">身高 <span>HEIGHT</span></label>
                     <div class="input-wrap">
                       <input id="height" name="height" type="number" inputmode="decimal" min="0.01" step="any" placeholder="例如 170" value="{{ height_input }}" required {% if errors.height %}aria-invalid="true" aria-describedby="height-error"{% endif %}>
@@ -80,6 +85,26 @@
               <div class="side-caption"><span class="caption-line"></span> SMALL STEPS, BETTER DAYS.</div>
             {% endif %}
           </div>
+        </section>
+
+        <section class="user-list-section" aria-labelledby="users-title">
+          <div>
+            <span class="section-number">03 / HISTORY</span>
+            <h2 id="users-title">所有使用者</h2>
+            <p>點選名稱即可查看歷次 BMI 數值與計算時間。</p>
+          </div>
+          {% if users %}
+            <div class="user-list">
+              {% for user in users %}
+                <a class="user-link" href="{{ url_for('user_history', user_name=user.user_name) }}">
+                  <span>{{ user.user_name }}</span>
+                  <small>{{ user.record_count }} 筆紀錄 ↗</small>
+                </a>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="empty-state">目前還沒有計算紀錄。</p>
+          {% endif %}
         </section>
 
         <section class="information" aria-labelledby="about-title">

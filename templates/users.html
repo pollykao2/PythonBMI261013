@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>所有使用者 · BMI 計算器</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <a class="brand" href="{{ url_for('index') }}">✳ 好好生活 <span class="brand-en">WELL LIVING</span></a>
+      </header>
+      <main class="history-page">
+        <span class="section-number">03 / HISTORY</span>
+        <h1>所有使用者</h1>
+        <p class="intro">點選使用者名稱，查看歷次 BMI 數值與計算時間。</p>
+        {% if users %}
+          <div class="user-list user-list-page">
+            {% for user in users %}
+              <a class="user-link" href="{{ url_for('user_history', user_name=user.user_name) }}">
+                <span>{{ user.user_name }}</span>
+                <small>{{ user.record_count }} 筆紀錄 ↗</small>
+              </a>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="empty-state">目前還沒有計算紀錄。<a href="{{ url_for('index') }}">返回首頁開始計算</a></p>
+        {% endif %}
+      </main>
+    </div>
+  </body>
+</html>
