@@ -23,7 +23,13 @@ BMI = 體重（公斤）÷ 身高（公尺）²。分類採臺灣成人體位參
 
 這只是成人體位參考，不能取代專業醫療評估，也不適用於兒童、青少年或孕婦。
 
+頁面另提供「兵役 BMI 初步評估」，僅依使用者輸入的身高與體重顯示 BMI 及提醒資訊，不是正式的台灣兵役體位分類或判定，也不會以一般成人 BMI 分類推定兵役資格。正式資格與體位請以最新台灣官方規定或主管機關、授權機構的認定為準。
+
 執行測試：`python -m unittest discover -s tests`
+
+## Agent Skill
+
+本專案提供 `.github/skills/create-user-story-and-ac/SKILL.md`，用於實作與驗證「兵役 BMI 初步評估」功能。Skill 會保留 User Story 與 Acceptance Criteria，並強制區分一般成人 BMI 健康參考與正式台灣兵役體位判定。
 
 ## 部署到 Azure Web App
 

@@ -94,6 +94,18 @@ def bmi_guidance(bmi):
     }
 
 
+def military_service_assessment(height, weight, bmi):
+    return {
+        "title": "兵役 BMI 初步評估",
+        "summary": (
+            f"依你提供的身高 {height:g} 公分與體重 {weight:g} 公斤，"
+            f"計算 BMI 為 {bmi:.1f}。"
+        ),
+        "disclaimer": "此結果僅供初步參考，不是正式的台灣兵役體位分類或判定。",
+        "guidance": "正式資格與體位請以最新台灣官方規定或主管機關、授權機構的認定為準。",
+    }
+
+
 def parse_positive_number(value):
     try:
         number = float(value)
@@ -139,7 +151,13 @@ def index():
                     errors["weight"] = "無法使用這組數值計算 BMI，請檢查身高與體重。"
                 else:
                     displayed_bmi = round(bmi, 1)
-                    result = {"bmi": f"{displayed_bmi:.1f}", **bmi_guidance(displayed_bmi)}
+                    result = {
+                        "bmi": f"{displayed_bmi:.1f}",
+                        **bmi_guidance(displayed_bmi),
+                        "military_assessment": military_service_assessment(
+                            height, weight, displayed_bmi
+                        ),
+                    }
                     with get_database() as connection:
                         connection.execute(
                             """

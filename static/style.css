@@ -66,6 +66,9 @@ button span { font-size: 20px; font-weight: 400; }
 .result-label strong { margin-left: 5px; color: #234f37; font-size: 18px; }
 .result-panel h2 { position: relative; z-index: 1; margin: 31px 0 10px; font-size: 17px; }
 .result-panel p { position: relative; z-index: 1; max-width: 340px; margin: 0; color: #4f6657; font-size: 14px; line-height: 1.9; }
+.military-assessment { position: relative; z-index: 1; margin-top: 26px; padding-top: 20px; border-top: 1px solid #b6cfb5; }
+.military-assessment h3 { margin: 8px 0 8px; font-size: 16px; }
+.military-assessment p + p { margin-top: 8px; }
 .result-decoration { position: absolute; right: -30px; bottom: -87px; color: #d0e3ca; font-size: 260px; line-height: 1; }
 .information { display: grid; grid-template-columns: 1fr 1fr; gap: 10%; padding: 40px 0 45px; border-top: 1px solid #e1e5dc; }
 .user-list-section { display: grid; grid-template-columns: .8fr 1.2fr; gap: 10%; padding: 40px 0 45px; border-top: 1px solid #e1e5dc; }

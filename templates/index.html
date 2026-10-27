@@ -74,6 +74,13 @@
                 <span class="result-label">你的體位屬於 <strong>{{ result.label }}</strong></span>
                 <h2 id="result-title">給你的健康建議</h2>
                 <p>{{ result.advice }}</p>
+                <div class="military-assessment" aria-labelledby="military-assessment-title">
+                  <span class="panel-kicker">MILITARY SERVICE / 初步評估</span>
+                  <h3 id="military-assessment-title">{{ result.military_assessment.title }}</h3>
+                  <p>{{ result.military_assessment.summary }}</p>
+                  <p><strong>{{ result.military_assessment.disclaimer }}</strong></p>
+                  <p>{{ result.military_assessment.guidance }}</p>
+                </div>
                 <span class="result-decoration" aria-hidden="true">✳</span>
               </section>
             {% else %}
