@@ -30,6 +30,18 @@ class BmiAppTests(unittest.TestCase):
         self.assertIn("健康體位", page)
         self.assertIn("維持均衡飲食", page)
 
+    def test_military_service_assessment_is_preliminary_only(self):
+        response = self.client.post(
+            "/",
+            data={"name": "王小明", "height": "170", "weight": "65"},
+        )
+        page = response.get_data(as_text=True)
+        self.assertIn("兵役 BMI 初步評估", page)
+        self.assertIn("BMI 為 22.5", page)
+        self.assertIn("不是正式的台灣兵役體位分類或判定", page)
+        self.assertIn("最新台灣官方規定或主管機關", page)
+        self.assertNotIn("正式兵役體位：健康體位", page)
+
     def test_user_history_lists_saved_records(self):
         self.client.post("/", data={"name": "王小明", "height": "170", "weight": "65"})
         self.client.post("/", data={"name": "王小明", "height": "160", "weight": "60"})
